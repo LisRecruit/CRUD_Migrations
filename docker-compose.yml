@@ -1,0 +1,25 @@
+services:
+  h2:
+    image: openjdk:21-jdk-slim
+#    image: h2database/h2:latest
+#    image: oscarh/h2:1.4.200
+    container_name: h2
+    ports:
+      - "9093:9092"  # TCP
+      - "8083:8082"  # WEB
+    networks:
+      - h2-network
+
+#    command: java -cp /h2/h2-2.3.232.jar org.h2.tools.Server -tcp -tcpAllowOthers -web -webAllowOthers -webPort=8082
+    environment:
+      H2_OPTIONS: "-tcpAllowOthers -webAllowOthers -webPort=8082"
+    volumes:
+      - h2_data:/opt/h2-data
+      - ./h2:/h2
+
+networks:
+  h2-network:
+    driver: bridge
+
+volumes:
+  h2_data:

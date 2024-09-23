@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+application {
+    mainClass.set('org.example.DatabasePopulateService')
+}
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+//application {
+//    mainClassName = 'DatabasePopulateService'
+//}
+
+dependencies {
+    implementation 'com.h2database:h2:2.3.232'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    testImplementation group: 'com.h2database', name: 'h2', version: '2.3.232'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.1.0'
+
+
+
+//    implementation 'org.h2database:h2database:1.0.20061217'
+//    implementation 'org.h2database:h2database:2.3.232'
+    implementation 'com.h2database:h2-mvstore:2.3.230'
+}
+
+test {
+    useJUnitPlatform()
+}
