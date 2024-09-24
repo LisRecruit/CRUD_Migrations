@@ -1,9 +1,12 @@
 package org.example;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+@UtilityClass
 public class DatabaseTools {
     public static String readSqlFile(String filePath) throws IOException {
         StringBuilder sql = new StringBuilder();

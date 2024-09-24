@@ -1,4 +1,4 @@
-package org.example.tableObjects;
+package org.example.table_objects;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Client {
-    public Long id;
-    public String name;
+    private Long id;
+    private String name;
 }
 

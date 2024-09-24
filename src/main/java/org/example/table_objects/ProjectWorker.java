@@ -1,4 +1,4 @@
-package org.example.tableObjects;
+package org.example.table_objects;
 
 
 import lombok.Builder;

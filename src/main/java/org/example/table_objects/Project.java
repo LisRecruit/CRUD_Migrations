@@ -1,6 +1,5 @@
-package org.example.tableObjects;
+package org.example.table_objects;
 import java.time.LocalDate;
-import java.util.Date;
 import lombok.Builder;
 import lombok.Data;
 @Data
