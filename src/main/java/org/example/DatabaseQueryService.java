@@ -4,8 +4,9 @@ package org.example;
 import lombok.SneakyThrows;
 import org.example.table_objects.*;
 
-import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,9 @@ public class DatabaseQueryService {
     public static List<Project> findLongestProject() {
         Connection connection = Database.getConnetction();
         List<Project> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery
-                    (DatabaseTools.readSqlFile("sql/find_longest_project.sql"));
+        String initDb = DatabaseTools.readSqlFile("sql/find_longest_project.sql");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(initDb)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 java.sql.Date startDate = resultSet.getDate("START_DATE");
                 java.sql.Date finishDate = resultSet.getDate("FINISH_DATE");
@@ -33,9 +34,7 @@ public class DatabaseQueryService {
                             .build());
                 }
             }
-            result.forEach(project -> System.out.println(project));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            result.forEach(System.out::println);
         }
         return result;
     }
@@ -44,9 +43,9 @@ public class DatabaseQueryService {
     public static void findClientWithMaxProjects() {
         Connection connection = Database.getConnetction();
         List<Client> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(DatabaseTools.readSqlFile
-                    ("sql/find_max_projects_client.sql"));
+        String initDb = DatabaseTools.readSqlFile("sql/find_max_projects_client.sql");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(initDb)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Long projectCount = resultSet.getObject("project_count", Long.class);
                 result.add(Client.builder()
@@ -55,8 +54,6 @@ public class DatabaseQueryService {
                         .build());
                 result.forEach(project -> System.out.println(project + "Projects count: " + projectCount));
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -64,9 +61,9 @@ public class DatabaseQueryService {
     public static void findWorkerWithMaxSalary() {
         Connection connection = Database.getConnetction();
         List<Worker> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(DatabaseTools.readSqlFile
-                    ("sql/find_max_salary_worker.sql"));
+        String initDb = DatabaseTools.readSqlFile("sql/find_max_salary_worker.sql");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(initDb)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 java.sql.Date birthDate = resultSet.getDate("BIRTHDAY");
                 LocalDate localBirthDate = birthDate.toLocalDate();
@@ -84,7 +81,7 @@ public class DatabaseQueryService {
                         .build()
                 );
             }
-            result.forEach(worker -> System.out.println(worker));
+            result.forEach(System.out::println);
         }
     }
 
@@ -92,10 +89,9 @@ public class DatabaseQueryService {
     public static void findYoungestOldesWorkers() {
         Connection connection = Database.getConnetction();
         List<Worker> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-
-            ResultSet resultSet = statement.executeQuery(DatabaseTools.readSqlFile
-                    ("sql/find_youngest_eldest_workers.sql"));
+        String initDb = DatabaseTools.readSqlFile("sql/find_youngest_eldest_workers.sql");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(initDb)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String type = resultSet.getString("TYPE");
                 String name = resultSet.getString("NAME");
@@ -108,20 +104,16 @@ public class DatabaseQueryService {
                 result.add(worker);
                 System.out.println(type + ": " + worker.getName() + ", Birthday: " + worker.getBirthday());
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-
     }
 
     @SneakyThrows
     public static void printProjectPrices() {
         Connection connection = Database.getConnetction();
         List<ProjectCost> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(DatabaseTools.readSqlFile
-                    ("sql/print_project_prices.sql"));
+        String initDb = DatabaseTools.readSqlFile("sql/print_project_prices.sql");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(initDb)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result.add(ProjectCost.builder()
                         .projectId(resultSet.getObject("ID", Long.class))
@@ -130,7 +122,7 @@ public class DatabaseQueryService {
                         .build()
                 );
             }
-            result.forEach(projectCost -> System.out.println(projectCost));
+            result.forEach(System.out::println);
         }
     }
 }

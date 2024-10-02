@@ -1,8 +1,5 @@
 WITH project_durations AS (
     SELECT p.ID AS project_id,
---           EXTRACT(YEAR FROM AGE(p.FINISH_DATE, p.START_DATE)) * 12 +
---           EXTRACT(MONTH FROM AGE(p.FINISH_DATE, p.START_DATE)) AS duration_months
-
               (YEAR(p.FINISH_DATE) - YEAR(p.START_DATE)) * 12 +
               (MONTH(p.FINISH_DATE) - MONTH(p.START_DATE)) AS duration_months
     FROM project p
