@@ -1,41 +1,78 @@
-package org.example.table_objects;
+package org.example.service;
 
-import org.example.Database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.example.model.Client;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ClientService {
-    private static final int MIN_NAME_LENGTH = 2;
-    private static final int MAX_NAME_LENGTH = 1000;
+    private final SessionFactory sessionFactory;
 
-    Connection connection;
+    public ClientService(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-    {
-        try {
-            connection = Database.getConnetction();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public long create(String name) {
+        Client client = new Client();
+        client.setName(name);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(client);
+            transaction.commit();
+            return client.getId();
         }
     }
 
-    public long create (String name){
-
+    public String getById(long id) {
+        try (Session session = sessionFactory.openSession()) {
+            Client client = session.get(Client.class, id);
+            if (client == null) {
+                System.out.println("Client not found.");
+            }
+            return client != null ? client.getName() : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public String getById(long id) throws SQLException {
-        String sql = "SELECT NAME FROM client WHERE ID = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                return rs.getString("NAME");
+    public void setName(long id, String name) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Client client = session.get(Client.class, id);
+            if (client != null) {
+                client.setName(name);
+                session.merge(client);
+                transaction.commit();
             } else {
-                throw new SQLException("Client with ID " + id + " not found.");
+                throw new IllegalArgumentException ("Client with this ID not found");
             }
         }
+
+    }
+    public void deleteById (long id){
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Client client = session.get(Client.class, id);
+            if (client != null) {
+                session.remove(client);
+                transaction.commit();
+            } else {
+                throw new IllegalArgumentException ("Client with this ID not found");
+            }
+        }
+    }
+    public List<Client> listAll(){
+        List<Client> result = new ArrayList<>();
+        try (Session session = sessionFactory.openSession()) {
+            result = session.createQuery("FROM Client", Client.class).list();
+        }
+        return result;
     }
 
 

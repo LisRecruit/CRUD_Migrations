@@ -1,4 +1,4 @@
-package org.example;
+package org.example.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -31,7 +31,7 @@ public class Database {
     }
 
     public static Connection getConnetction() throws SQLException {
-
+        System.out.println("Подключение к базе данных по URL: " + DB_URL);
         try {
             return ds.getConnection();
         } catch (SQLException e) {

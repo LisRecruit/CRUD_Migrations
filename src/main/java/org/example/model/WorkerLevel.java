@@ -1,4 +1,4 @@
-package org.example.table_objects;
+package org.example.model;
 
 public enum WorkerLevel {
     TRAINEE,
