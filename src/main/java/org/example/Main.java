@@ -6,8 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-import java.sql.SQLException;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -19,11 +17,11 @@ public class Main {
         ClientService clientService = new ClientService(sessionFactory);
 
         System.out.println(clientService.getById(1));
-//        System.out.println(clientService.create("AnotherClient"));
-        System.out.println(clientService.getById(8));
-        clientService.setName(8, "AnotherUpdate");
-        System.out.println(clientService.getById(8));
-        clientService.deleteById(8);
+        System.out.println(clientService.create("A"));
+//        System.out.println(clientService.getById(8));
+//        clientService.setName(8, "AnotherUpdate");
+//        System.out.println(clientService.getById(8));
+//        clientService.deleteById(8);
         System.out.println(clientService.listAll());
 
 

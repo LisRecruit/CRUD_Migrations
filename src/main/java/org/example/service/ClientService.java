@@ -18,6 +18,11 @@ public class ClientService {
     }
 
     public long create(String name) {
+        if (!validateName(name)){
+            System.out.println("Wrong name format");
+            return -1;
+        }
+        validateName(name);
         Client client = new Client();
         client.setName(name);
         try (Session session = sessionFactory.openSession()) {
@@ -42,6 +47,10 @@ public class ClientService {
     }
 
     public void setName(long id, String name) {
+        if (!validateName(name)){
+            System.out.println("Wrong name format");
+            return;
+        }
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             Client client = session.get(Client.class, id);
@@ -73,6 +82,13 @@ public class ClientService {
             result = session.createQuery("FROM Client", Client.class).list();
         }
         return result;
+    }
+
+    private boolean validateName(String name) {
+        if (name == null || name.length() < 2 || name.length() > 1000) {
+            return false;
+        }
+        return true;
     }
 
 
