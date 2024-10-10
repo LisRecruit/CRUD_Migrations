@@ -3,6 +3,7 @@ package org.example;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.experimental.UtilityClass;
+import org.flywaydb.core.Flyway;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,6 +21,13 @@ public class Database {
         config.setUsername(DB_USER);
         config.setPassword(DB_PASSWORD);
         ds = new HikariDataSource(config);
+        Flyway.configure()
+                .dataSource(ds)
+                .baselineOnMigrate(true)
+                .baselineVersion("1")
+                .locations("classpath:db/migrations")
+                .load()
+                .migrate();
     }
 
     public static Connection getConnetction() throws SQLException {
