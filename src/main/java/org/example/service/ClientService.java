@@ -19,8 +19,7 @@ public class ClientService {
 
     public long create(String name) {
         if (!validateName(name)){
-            System.out.println("Wrong name format");
-            return -1;
+            throw new IllegalArgumentException("Wrong name format");
         }
         validateName(name);
         Client client = new Client();
@@ -37,7 +36,7 @@ public class ClientService {
         try (Session session = sessionFactory.openSession()) {
             Client client = session.get(Client.class, id);
             if (client == null) {
-                System.out.println("Client not found.");
+                throw new IllegalArgumentException("Client with this ID not found");
             }
             return client != null ? client.getName() : null;
         } catch (Exception e) {
@@ -48,8 +47,7 @@ public class ClientService {
 
     public void setName(long id, String name) {
         if (!validateName(name)){
-            System.out.println("Wrong name format");
-            return;
+            throw new IllegalArgumentException("Wrong name format");
         }
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -59,7 +57,7 @@ public class ClientService {
                 session.merge(client);
                 transaction.commit();
             } else {
-                throw new IllegalArgumentException ("Client with this ID not found");
+                throw new IllegalArgumentException ("Client not found");
             }
         }
 
@@ -90,6 +88,7 @@ public class ClientService {
         }
         return true;
     }
+
 
 
 }
