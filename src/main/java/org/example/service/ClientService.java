@@ -52,12 +52,12 @@ public class ClientService {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             Client client = session.get(Client.class, id);
-            if (client != null) {
+            if (client == null) {
+                throw new IllegalArgumentException ("Client not found");
+            } else {
                 client.setName(name);
                 session.merge(client);
                 transaction.commit();
-            } else {
-                throw new IllegalArgumentException ("Client not found");
             }
         }
 
@@ -66,11 +66,11 @@ public class ClientService {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             Client client = session.get(Client.class, id);
-            if (client != null) {
+            if (client == null) {
+                throw new IllegalArgumentException ("Client with this ID not found");
+            } else {
                 session.remove(client);
                 transaction.commit();
-            } else {
-                throw new IllegalArgumentException ("Client with this ID not found");
             }
         }
     }
